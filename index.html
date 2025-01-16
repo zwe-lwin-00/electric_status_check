@@ -174,7 +174,7 @@
             document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : <b>${now.toLocaleString()}</b><br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး မလာဘူး။</b><br>လျှပ်စစ်မီး ပြန်လာမည့်အချိန် : <b>${nextChange.time}</b>`;
         } else {
             nextChange = getNextElectricChange(currentDate, currentHour, 'on', group);
-            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : <b>${now.toLocaleString()}</b><br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး လာနေတယ်။</b><br>လျှပ်စစ်မီး ပြန်ပြတ်မယ့်အချိန် : <b>${nextChange.time}</b>`;
+            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : <b>${now.toLocaleString()}</b><br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး လာနေတယ်။</b><br>လျှပ်စစ်မီး ပြန်ပြတ်မည့်အချိန် : <b>${nextChange.time}</b>`;
         }
     });
 </script>
