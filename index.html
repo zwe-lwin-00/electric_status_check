@@ -62,7 +62,7 @@
 <body>
 
 <div class="container">
-    <h1>လျှပ်စစ်အခြေအနေကို စစ်ဆေးကြည့်ရအောင်</h1>
+    <h1>လျှပ်စစ်မီး အခြေအနေကို စစ်ဆေးကြည့်ရအောင်</h1>
 
     <label for="group">ကျေးဇူးပြု၍ မှန်ကန်သောအုပ်စု (A၊ B၊ သို့မဟုတ် C) ကို ရွေးပါ။</label>
     <select id="group" class="form-select">
@@ -171,13 +171,12 @@
 
         if (currentStatus === 'off') {
             nextChange = getNextElectricChange(currentDate, currentHour, 'off', group);
-            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန်: ${now.toLocaleString()}<br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ: လျှပ်စစ်မီး မလာဘူး။<br>လျှပ်စစ်မီး ပြန်လာမည့်အချိန်: ${nextChange.time}`;
+            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : ${now.toLocaleString()}<br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး မလာဘူး။</b><br>လျှပ်စစ်မီး ပြန်လာမည့်အချိန် : <b>${nextChange.time}</b>`;
         } else {
             nextChange = getNextElectricChange(currentDate, currentHour, 'on', group);
-            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန်: ${now.toLocaleString()}<br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ: လျှပ်စစ်မီး လာနေတယ်။<br>လျှပ်စစ်မီး ပြန်ပြတ်မယ့်အချိန်: ${nextChange.time}`;
+            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : ${now.toLocaleString()}<br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး လာနေတယ်။</b><br>လျှပ်စစ်မီး ပြန်ပြတ်မယ့်အချိန် : <b>${nextChange.time}</b>`;
         }
     });
 </script>
-
 </body>
 </html>
