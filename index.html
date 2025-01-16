@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Status Checker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 500px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        select, button {
+            font-size: 14px;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+        }
+        button {
+            background-color: #4cae4c;
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #5cb85c;
+        }
+        .result {
+            font-size: 14px;
+            color: #333;
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>လျှပ်စစ်အခြေအနေကို စစ်ဆေးကြည့်ရအောင်</h1>
+
+    <label for="group">ကျေးဇူးပြု၍ မှန်ကန်သောအုပ်စု (A၊ B၊ သို့မဟုတ် C) ကို ရွေးပါ။</label>
+    <select id="group" class="form-select">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+    </select>
+
+    <button id="checkButton" class="btn btn-success">အခြေအနေကိုစစ်ဆေးပါ။</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    const scheduleData = [
+        {date: '2025/01/05', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/06', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/07', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/08', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/09', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/10', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/11', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/12', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/13', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/14', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/15', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/16', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/17', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/18', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/19', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/20', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/21', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/22', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/23', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/24', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/25', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/26', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/27', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/28', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
+        {date: '2025/01/29', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
+        {date: '2025/01/30', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
+        {date: '2025/01/31', times: ['C', 'A', 'B', 'C', 'A', 'B+C']}
+    ];
+
+    const timeSlots = [
+        {start: 5, end: 9},
+        {start: 9, end: 13},
+        {start: 13, end: 17},
+        {start: 17, end: 21},
+        {start: 21, end: 24},
+        {start: 0, end: 5}
+    ];
+
+    function formatTime(hour) {
+        const date = new Date();
+        date.setHours(hour, 0, 0, 0);
+        return date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    }
+
+    function getCurrentElectricStatus(date, hour, group) {
+        const schedule = scheduleData.find(item => item.date === date);
+        if (schedule) {
+            for (let i = 0; i < timeSlots.length; i++) {
+                const slot = timeSlots[i];
+                if (hour >= slot.start && hour < slot.end) {
+                    const groupStatus = schedule.times[i];
+                    return groupStatus.includes(group) ? 'on' : 'off';
+                }
+            }
+        }
+        return 'off';
+    }
+
+    function getNextElectricChange(date, hour, currentStatus, group) {
+        const schedule = scheduleData.find(item => item.date === date);
+        if (schedule) {
+            for (let i = 0; i < timeSlots.length; i++) {
+                const status = schedule.times[i];
+                if (currentStatus === 'off' && status.includes(group)) {
+                    if (hour < timeSlots[i].start) {
+                        return { time: formatTime(timeSlots[i].start), status: 'on' };
+                    }
+                } else if (currentStatus === 'on' && !status.includes(group)) {
+                    if (hour < timeSlots[i].start) {
+                        return { time: formatTime(timeSlots[i].start), status: 'off' };
+                    }
+                }
+            }
+        }
+        return { time: 'N/A', status: currentStatus };
+    }
+
+    document.getElementById('checkButton').addEventListener('click', () => {
+        const group = document.getElementById('group').value;
+        const now = new Date();
+        const currentDate = now.toISOString().split('T')[0].replace(/-/g, '/');
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+
+        const currentStatus = getCurrentElectricStatus(currentDate, currentHour, group);
+        let nextChange;
+
+        if (currentStatus === 'off') {
+            nextChange = getNextElectricChange(currentDate, currentHour, 'off', group);
+            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန်: ${now.toLocaleString()}<br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ: လျှပ်စစ်မီး မလာဘူး။<br>လျှပ်စစ်မီး ပြန်လာမည့်အချိန်: ${nextChange.time}`;
+        } else {
+            nextChange = getNextElectricChange(currentDate, currentHour, 'on', group);
+            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန်: ${now.toLocaleString()}<br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ: လျှပ်စစ်မီး လာနေတယ်။<br>လျှပ်စစ်မီး ပြန်ပြတ်မယ့်အချိန်: ${nextChange.time}`;
+        }
+    });
+</script>
+
+</body>
+</html>
