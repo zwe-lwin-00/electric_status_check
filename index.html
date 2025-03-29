@@ -3,241 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electric Status Checker</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Electricity Schedule</title>
     <style>
         body {
-            font-family: Helvetica, Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
         }
         .container {
             background-color: white;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 500px;
-        }
-        h1 {
-            font-size: 24px;
-            color: #333;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             margin-bottom: 20px;
         }
-        label {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 10px;
+        .status {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .on {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .off {
+            background-color: #f44336;
+            color: white;
         }
         select, button {
-            font-size: 14px;
             padding: 10px;
+            font-size: 16px;
             margin: 10px 0;
-            border-radius: 5px;
             width: 100%;
-            cursor: pointer;
         }
         button {
-            background-color: #4cae4c;
+            background-color: #008CBA;
             color: white;
             border: none;
-            transition: background-color 0.3s;
+            cursor: pointer;
         }
         button:hover {
-            background-color: #5cb85c;
+            background-color: #007B9E;
         }
-        .result {
-            font-size: 14px;
-            color: #333;
+        .next-change {
+            text-align: center;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        .current-time {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
-            text-align: left;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Electricity Schedule</h1>
+        
+        <div class="current-time">
+            <h2>Current Date & Time:</h2>
+            <div id="currentDateTime"></div>
+        </div>
+        
+        <div>
+            <label for="groupSelect">Select Your Group:</label>
+            <select id="groupSelect">
+                <option value="A">Group A</option>
+                <option value="B">Group B</option>
+                <option value="C">Group C</option>
+                <option value="D">Group D</option>
+                <option value="E">Group E</option>
+                <option value="F">Group F</option>
+                <option value="G">Group G</option>
+                <option value="H">Group H</option>
+                <option value="I">Group I</option>
+            </select>
+        </div>
+        
+        <div id="statusContainer" class="status">
+            <!-- Status will be displayed here -->
+        </div>
+        
+        <div id="nextChange" class="next-change">
+            <!-- Next change time will be displayed here -->
+        </div>
+        
+        <div>
+            <h2>Schedule Table</h2>
+            <table id="scheduleTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>1 to 5</th>
+                        <th>5 to 9</th>
+                        <th>9 to 13</th>
+                        <th>13 to 17</th>
+                        <th>17 to 21</th>
+                        <th>21 to 1</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<div class="container">
-    <h1>လျှပ်စစ်မီး အခြေအနေကို စစ်ဆေးကြည့်ရအောင်</h1>
+    <script>
+        // Schedule data
+        const scheduleData = [
+            { date: "3/29/2025", slots: ["F", "A", "B", "C", "D", "E"] },
+            { date: "3/30/2025", slots: ["A", "B", "C", "D", "E", "F"] },
+            { date: "3/31/2025", slots: ["B", "C", "D", "E", "F", "G"] },
+            { date: "4/1/2025", slots: ["C", "D", "E", "F", "G", "H"] },
+            { date: "4/2/2025", slots: ["D", "E", "F", "G", "H", "I"] },
+            { date: "4/3/2025", slots: ["E", "F", "G", "H", "I", "A"] },
+            { date: "4/4/2025", slots: ["F", "G", "H", "I", "A", "B"] },
+            { date: "4/5/2025", slots: ["G", "H", "I", "A", "B", "C"] },
+            { date: "4/6/2025", slots: ["H", "I", "A", "B", "C", "D"] },
+            { date: "4/7/2025", slots: ["I", "A", "B", "C", "D", "E"] },
+            { date: "4/8/2025", slots: ["A", "B", "C", "D", "E", "F"] },
+            { date: "4/9/2025", slots: ["B", "C", "D", "E", "F", "G"] },
+            { date: "4/10/2025", slots: ["C", "D", "E", "F", "G", "H"] },
+            { date: "4/11/2025", slots: ["D", "E", "F", "G", "H", "I"] },
+            { date: "4/12/2025", slots: ["E", "F", "G", "H", "I", "A"] },
+            { date: "4/13/2025", slots: ["F", "G", "H", "I", "A", "B"] },
+            { date: "4/14/2025", slots: ["G", "H", "I", "A", "B", "C"] },
+            { date: "4/15/2025", slots: ["H", "I", "A", "B", "C", "D"] },
+            { date: "4/16/2025", slots: ["I", "A", "B", "C", "D", "E"] }
+        ];
 
-    <label for="group">ကျေးဇူးပြု၍ မှန်ကန်သောအုပ်စု (A၊ B၊ သို့မဟုတ် C) ကို ရွေးပါ။</label>
-    <select id="group" class="form-select">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-    </select>
+        // Time slots
+        const timeSlots = [
+            { start: 1, end: 5, name: "1 to 5" },
+            { start: 5, end: 9, name: "5 to 9" },
+            { start: 9, end: 13, name: "9 to 13" },
+            { start: 13, end: 17, name: "13 to 17" },
+            { start: 17, end: 21, name: "17 to 21" },
+            { start: 21, end: 1, name: "21 to 1" }
+        ];
 
-    <button id="checkButton" class="btn btn-success">အခြေအနေကိုစစ်ဆေးပါ။</button>
+        // Populate the schedule table
+        function populateScheduleTable() {
+            const tableBody = document.querySelector("#scheduleTable tbody");
+            tableBody.innerHTML = "";
+            
+            scheduleData.forEach(day => {
+                const row = document.createElement("tr");
+                
+                // Add date cell
+                const dateCell = document.createElement("td");
+                dateCell.textContent = day.date;
+                row.appendChild(dateCell);
+                
+                // Add time slot cells
+                day.slots.forEach(slot => {
+                    const cell = document.createElement("td");
+                    cell.textContent = slot;
+                    row.appendChild(cell);
+                });
+                
+                tableBody.appendChild(row);
+            });
+        }
 
-    <div class="result" id="result"></div>
-</div>
+        // Update current date and time
+        function updateCurrentDateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            };
+            document.getElementById("currentDateTime").textContent = now.toLocaleDateString('en-US', options);
+            
+            // Check electricity status every second
+            checkElectricityStatus();
+            
+            setTimeout(updateCurrentDateTime, 1000);
+        }
 
-<!-- Bootstrap JS and Popper.js -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-
-<script>
-    const scheduleData = [
-        {date: '2025/01/05', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/06', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/07', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/08', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/09', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/10', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/11', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/12', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/13', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/14', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/15', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/16', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/17', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/18', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/19', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/20', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/21', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/22', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/23', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/24', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/25', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/26', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/27', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/28', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/01/29', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/01/30', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/01/31', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-		{date: '2025/02/01', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/02', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/03', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/04', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/05', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/06', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/07', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/08', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/09', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/10', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/11', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/12', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/13', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/14', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/15', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/16', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/17', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/18', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/19', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/20', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/21', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/22', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/23', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/24', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/25', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/02/26', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},
-        {date: '2025/02/27', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},
-        {date: '2025/02/28', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},
-        {date: '2025/03/01', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/02', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/03', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/04', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/05', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/06', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/07', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/08', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/09', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/10', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/11', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/12', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/13', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/14', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/15', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/16', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/17', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/18', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/19', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/20', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/21', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/22', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/23', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/24', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/25', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/26', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/27', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/28', times: ['B', 'C', 'A', 'B', 'C', 'A+B']},  
-        {date: '2025/03/29', times: ['C', 'A', 'B', 'C', 'A', 'B+C']},  
-        {date: '2025/03/30', times: ['A', 'B', 'C', 'A', 'B', 'C+A']},  
-        {date: '2025/03/31', times: ['B', 'C', 'A', 'B', 'C', 'A+B']}  
-
-    ];
-
-    const timeSlots = [
-        {start: 5, end: 9},
-        {start: 9, end: 13},
-        {start: 13, end: 17},
-        {start: 17, end: 21},
-        {start: 21, end: 24},
-        {start: 0, end: 5}
-    ];
-
-    function formatTime(hour) {
-        const date = new Date();
-        date.setHours(hour, 0, 0, 0);
-        return date.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-    }
-
-    function getCurrentElectricStatus(date, hour, group) {
-        const schedule = scheduleData.find(item => item.date === date);
-        if (schedule) {
+        // Get current time slot
+        function getCurrentTimeSlot() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinutes = now.getMinutes();
+            const currentTime = currentHour + currentMinutes / 60;
+            
+            // Special case for 12 AM (0) to 1 AM
+            if (currentHour === 0) {
+                return timeSlots[5]; // 21 to 1 slot
+            }
+            
             for (let i = 0; i < timeSlots.length; i++) {
                 const slot = timeSlots[i];
-                if (hour >= slot.start && hour < slot.end) {
-                    const groupStatus = schedule.times[i];
-                    return groupStatus.includes(group) ? 'on' : 'off';
+                // Handle the 21 to 1 slot
+                if (slot.start === 21) {
+                    if (currentTime >= 21 || currentTime < 1) {
+                        return slot;
+                    }
+                } else if (currentTime >= slot.start && currentTime < slot.end) {
+                    return slot;
+                }
+            }
+            
+            return null;
+        }
+
+        // Get current date in schedule format (M/D/YYYY)
+        function getCurrentDate() {
+            const now = new Date();
+            return `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
+        }
+
+        // Check electricity status for selected group
+        function checkElectricityStatus() {
+            const selectedGroup = document.getElementById("groupSelect").value;
+            const currentDate = getCurrentDate();
+            const currentTimeSlot = getCurrentTimeSlot();
+            const statusContainer = document.getElementById("statusContainer");
+            const nextChangeElement = document.getElementById("nextChange");
+            
+            if (!currentTimeSlot) {
+                statusContainer.textContent = "Unable to determine current time slot";
+                statusContainer.className = "status";
+                return;
+            }
+            
+            // Find today's schedule
+            const todaySchedule = scheduleData.find(day => day.date === currentDate);
+            if (!todaySchedule) {
+                statusContainer.textContent = "No schedule available for today";
+                statusContainer.className = "status";
+                return;
+            }
+            
+            // Get the group for current time slot
+            const currentSlotIndex = timeSlots.findIndex(slot => slot.name === currentTimeSlot.name);
+            const currentGroup = todaySchedule.slots[currentSlotIndex];
+            
+            // Check if selected group has electricity now
+            const hasElectricity = currentGroup === selectedGroup;
+            
+            // Update status display
+            if (hasElectricity) {
+                statusContainer.textContent = "ELECTRICITY IS ON";
+                statusContainer.className = "status on";
+                
+                // Find when electricity will be cut off
+                const now = new Date();
+                const currentHour = now.getHours();
+                const currentMinutes = now.getMinutes();
+                const currentTime = currentHour + currentMinutes / 60;
+                
+                let cutoffTime;
+                if (currentTimeSlot.end === 1 && currentTime >= 21) {
+                    // For the 21 to 1 slot when it's past 21
+                    cutoffTime = "1:00 AM";
+                } else {
+                    cutoffTime = `${currentTimeSlot.end}:00 ${currentTimeSlot.end < 12 ? 'AM' : 'PM'}`;
+                    if (currentTimeSlot.end === 13) cutoffTime = "1:00 PM";
+                    if (currentTimeSlot.end === 12) cutoffTime = "12:00 PM";
+                }
+                
+                nextChangeElement.textContent = `Electricity will be cut off at ${cutoffTime}`;
+            } else {
+                statusContainer.textContent = "ELECTRICITY IS OFF";
+                statusContainer.className = "status off";
+                
+                // Find when electricity will be on next
+                let nextOnTime = null;
+                
+                // Check remaining slots today
+                for (let i = currentSlotIndex + 1; i < todaySchedule.slots.length; i++) {
+                    if (todaySchedule.slots[i] === selectedGroup) {
+                        nextOnTime = {
+                            time: timeSlots[i].start,
+                            today: true
+                        };
+                        break;
+                    }
+                }
+                
+                // If not found today, check future days
+                if (!nextOnTime) {
+                    for (let i = 0; i < scheduleData.length; i++) {
+                        const day = scheduleData[i];
+                        // Skip today and previous days
+                        if (day.date <= currentDate) continue;
+                        
+                        for (let j = 0; j < day.slots.length; j++) {
+                            if (day.slots[j] === selectedGroup) {
+                                nextOnTime = {
+                                    time: timeSlots[j].start,
+                                    date: day.date,
+                                    today: false
+                                };
+                                break;
+                            }
+                        }
+                        if (nextOnTime) break;
+                    }
+                }
+                
+                if (nextOnTime) {
+                    if (nextOnTime.today) {
+                        let displayTime = nextOnTime.time === 1 ? "1:00 AM" : 
+                                        nextOnTime.time === 13 ? "1:00 PM" :
+                                        nextOnTime.time < 12 ? `${nextOnTime.time}:00 AM` : 
+                                        `${nextOnTime.time - 12}:00 PM`;
+                        nextChangeElement.textContent = `Electricity will be on at ${displayTime} today`;
+                    } else {
+                        let displayTime = nextOnTime.time === 1 ? "1:00 AM" : 
+                                        nextOnTime.time === 13 ? "1:00 PM" :
+                                        nextOnTime.time < 12 ? `${nextOnTime.time}:00 AM` : 
+                                        `${nextOnTime.time - 12}:00 PM`;
+                        nextChangeElement.textContent = `Electricity will be on at ${displayTime} on ${nextOnTime.date}`;
+                    }
+                } else {
+                    nextChangeElement.textContent = "No future electricity schedule found for your group";
                 }
             }
         }
-        return 'off';
-    }
 
-    function getNextElectricChange(date, hour, currentStatus, group) {
-        const schedule = scheduleData.find(item => item.date === date);
-        if (schedule) {
-            for (let i = 0; i < timeSlots.length; i++) {
-                const status = schedule.times[i];
-                if (currentStatus === 'off' && status.includes(group)) {
-                    if (hour < timeSlots[i].start) {
-                        return { time: formatTime(timeSlots[i].start), status: 'on' };
-                    }
-                } else if (currentStatus === 'on' && !status.includes(group)) {
-                    if (hour < timeSlots[i].start) {
-                        return { time: formatTime(timeSlots[i].start), status: 'off' };
-                    }
-                }
-            }
-        }
-        //return { time: 'N/A', status: currentStatus };
-        return { time: '1AM', status: currentStatus };
-    }
-
-    document.getElementById('checkButton').addEventListener('click', () => {
-        const group = document.getElementById('group').value;
-        const now = new Date();
-        const currentDate = now.toISOString().split('T')[0].replace(/-/g, '/');
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-
-        const currentStatus = getCurrentElectricStatus(currentDate, currentHour, group);
-        let nextChange;
-
-        if (currentStatus === 'off') {
-            nextChange = getNextElectricChange(currentDate, currentHour, 'off', group);
-            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : <b>${now.toLocaleString()}</b><br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး မလာဘူး။</b><br>လျှပ်စစ်မီး ပြန်လာမည့်အချိန် : <b>${nextChange.time}</b>`;
-        } else {
-            nextChange = getNextElectricChange(currentDate, currentHour, 'on', group);
-            document.getElementById('result').innerHTML = `လက်ရှိ ရက်စွဲနှင့်အချိန် : <b>${now.toLocaleString()}</b><br><br>လက်ရှိ လျှပ်စစ်မီး အခြေအနေ : <b>လျှပ်စစ်မီး လာနေတယ်။</b><br>လျှပ်စစ်မီး ပြန်ပြတ်မည့်အချိန် : <b>${nextChange.time}</b>`;
-        }
-    });
-</script>
+        // Initialize the page
+        document.addEventListener("DOMContentLoaded", function() {
+            populateScheduleTable();
+            updateCurrentDateTime();
+            
+            // Update status when group selection changes
+            document.getElementById("groupSelect").addEventListener("change", checkElectricityStatus);
+        });
+    </script>
 </body>
 </html>
