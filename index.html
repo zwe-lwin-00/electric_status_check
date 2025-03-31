@@ -190,21 +190,36 @@
             { start: 21, end: 1, name: "21-1" }
         ];
 
-        // Populate the schedule table
+        // Helper function to parse date string (M/D/YYYY) to Date object
+        function parseScheduleDate(dateStr) {
+            const parts = dateStr.split('/');
+            return new Date(parts[2], parts[0] - 1, parts[1]);
+        }
+
+        // Populate the schedule table with only relevant days
         function populateScheduleTable() {
             const tableBody = document.querySelector("#scheduleTable tbody");
             tableBody.innerHTML = "";
             
-            const currentDate = getCurrentDate();
+            const currentDateStr = getCurrentDate();
+            const currentDate = parseScheduleDate(currentDateStr);
             const currentTimeSlot = getCurrentTimeSlot();
             
-            scheduleData.forEach(day => {
+            // Find today's index in the schedule data
+            const todayIndex = scheduleData.findIndex(day => day.date === currentDateStr);
+            
+            // Determine the range of days to show (previous day, today, and future days)
+            const startIndex = Math.max(0, todayIndex - 1); // Show one previous day
+            const endIndex = scheduleData.length - 1;
+            
+            for (let i = startIndex; i <= endIndex; i++) {
+                const day = scheduleData[i];
                 const row = document.createElement("tr");
                 
                 // Add date cell
                 const dateCell = document.createElement("td");
                 dateCell.textContent = day.date;
-                if (day.date === currentDate) {
+                if (day.date === currentDateStr) {
                     dateCell.classList.add("highlight-cell");
                 }
                 row.appendChild(dateCell);
@@ -215,7 +230,7 @@
                     cell.textContent = slot;
                     
                     // Highlight current time slot
-                    if (day.date === currentDate && currentTimeSlot && index === timeSlots.findIndex(s => s.name === currentTimeSlot.name)) {
+                    if (day.date === currentDateStr && currentTimeSlot && index === timeSlots.findIndex(s => s.name === currentTimeSlot.name)) {
                         cell.classList.add("highlight-cell");
                     }
                     
@@ -223,7 +238,7 @@
                 });
                 
                 tableBody.appendChild(row);
-            });
+            }
         }
 
         // Update current date and time
