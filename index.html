@@ -101,9 +101,6 @@
                                     <option value="A">Group A</option>
                                     <option value="B">Group B</option>
                                     <option value="C">Group C</option>
-                                    <option value="D">Group D</option>
-                                    <option value="E">Group E</option>
-                                    <option value="F">Group F</option>
                                 </select>
                             </div>
                         </div>
@@ -158,29 +155,41 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Corrected schedule data based on the image
+        // Updated schedule data based on the new timetable
         const scheduleData = [
-            { date: "3/29/2025", slots: ["A", "B", "C", "D", "E", "F"] },
-            { date: "3/30/2025", slots: ["F", "A", "B", "C", "D", "E"] },
-            { date: "3/31/2025", slots: ["E", "F", "A", "B", "C", "D"] },
-            { date: "4/1/2025", slots: ["D", "E", "F", "A", "B", "C"] },
-            { date: "4/2/2025", slots: ["C", "D", "E", "F", "A", "B"] },
-            { date: "4/3/2025", slots: ["B", "C", "D", "E", "F", "A"] },
-            { date: "4/4/2025", slots: ["A", "B", "C", "D", "E", "F"] },
-            { date: "4/5/2025", slots: ["F", "A", "B", "C", "D", "E"] },
-            { date: "4/6/2025", slots: ["E", "F", "A", "B", "C", "D"] },
-            { date: "4/7/2025", slots: ["D", "E", "F", "A", "B", "C"] },
-            { date: "4/8/2025", slots: ["C", "D", "E", "F", "A", "B"] },
-            { date: "4/9/2025", slots: ["B", "C", "D", "E", "F", "A"] },
-            { date: "4/10/2025", slots: ["A", "B", "C", "D", "E", "F"] },
-            { date: "4/11/2025", slots: ["F", "A", "B", "C", "D", "E"] },
-            { date: "4/12/2025", slots: ["E", "F", "A", "B", "C", "D"] },
-            { date: "4/13/2025", slots: ["D", "E", "F", "A", "B", "C"] },
-            { date: "4/14/2025", slots: ["C", "D", "E", "F", "A", "B"] },
-            { date: "4/15/2025", slots: ["B", "C", "D", "E", "F", "A"] }
+            { date: "4/1/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/2/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/3/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/4/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/5/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/6/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/7/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/8/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/9/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/10/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/11/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/12/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/13/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/14/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/15/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/16/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/17/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/18/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/19/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/20/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/21/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/22/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/23/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/24/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/25/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/26/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/27/2025", slots: ["B", "C", "A", "B", "C", "A+B"] },
+            { date: "4/28/2025", slots: ["C", "A", "B", "C", "A", "B+C"] },
+            { date: "4/29/2025", slots: ["A", "B", "C", "A", "B", "C+A"] },
+            { date: "4/30/2025", slots: ["B", "C", "A", "B", "C", "A+B"] }
         ];
 
-        // Updated time slots to match the image
+        // Time slots remain the same
         const timeSlots = [
             { start: 5, end: 9, name: "5-9" },
             { start: 9, end: 13, name: "9-13" },
@@ -196,13 +205,18 @@
             return new Date(parts[2], parts[0] - 1, parts[1]);
         }
 
+        // Check if a group is included in a slot (handles combinations like "B+C")
+        function isGroupInSlot(group, slotValue) {
+            if (!slotValue) return false;
+            return slotValue.split('+').includes(group);
+        }
+
         // Populate the schedule table with only relevant days
         function populateScheduleTable() {
             const tableBody = document.querySelector("#scheduleTable tbody");
             tableBody.innerHTML = "";
             
             const currentDateStr = getCurrentDate();
-            const currentDate = parseScheduleDate(currentDateStr);
             const currentTimeSlot = getCurrentTimeSlot();
             
             // Find today's index in the schedule data
@@ -319,10 +333,10 @@
             
             // Get the group for current time slot
             const currentSlotIndex = timeSlots.findIndex(slot => slot.name === currentTimeSlot.name);
-            const currentGroup = todaySchedule.slots[currentSlotIndex];
+            const currentSlotValue = todaySchedule.slots[currentSlotIndex];
             
             // Check if selected group has electricity now
-            const hasElectricity = currentGroup === selectedGroup;
+            const hasElectricity = isGroupInSlot(selectedGroup, currentSlotValue);
             
             // Update status display
             if (hasElectricity) {
@@ -353,7 +367,7 @@
                 
                 // Check remaining slots today
                 for (let i = currentSlotIndex + 1; i < todaySchedule.slots.length; i++) {
-                    if (todaySchedule.slots[i] === selectedGroup) {
+                    if (isGroupInSlot(selectedGroup, todaySchedule.slots[i])) {
                         nextOnTime = {
                             time: timeSlots[i].start,
                             today: true
@@ -370,7 +384,7 @@
                         if (day.date <= currentDate) continue;
                         
                         for (let j = 0; j < day.slots.length; j++) {
-                            if (day.slots[j] === selectedGroup) {
+                            if (isGroupInSlot(selectedGroup, day.slots[j])) {
                                 nextOnTime = {
                                     time: timeSlots[j].start,
                                     date: day.date,
